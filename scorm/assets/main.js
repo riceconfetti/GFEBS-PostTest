@@ -1,14 +1,15 @@
+let current_question = 0;
 const test = document.getElementById("test");
 const nav = document.getElementById("nav");
 const exit = document.createElement("button");
 exit.innerText = "Exit";
-exit.addEventListener('click', () => {
-    doExit();
-}); nav.append(exit);
+//exit.addEventListener('click', doExit()); 
+
+nav.appendChild(exit);
 
 const next = document.createElement("button");
 next.innerText = "Next";
-next.addEventListener('click', () => {
+next.addEventListener('click', function () {
     current_question++;
     renderTest();
 });
@@ -22,12 +23,10 @@ prev.addEventListener('click', function () {
 
 const submit = document.createElement("button");
 submit.innerText = "Submit";
-submit.addEventListener('click', () => {
+submit.addEventListener('click', function () {
     doExit();
 });
 
-
-let current_question = 0;
 
 function runTest() {
     document.getElementById("header").style.display = "none";
@@ -68,7 +67,7 @@ function renderQuestion(id) {
 
     switch (questionJSON.type) {
         case 'multiple_choice':
-            questionJSON.options.forEach((opt) => {
+            questionJSON.options.forEach(function(opt) {
                 const row = document.createElement("span");
                 row.setAttribute("class", "choice")
 
@@ -77,7 +76,7 @@ function renderQuestion(id) {
                 option.setAttribute("id", opt);
                 option.setAttribute("name", "question_" + id);
                 option.setAttribute("value", opt);
-                option.addEvenetListener("change", responseHandler(opt, current_question));
+                option.addEventListener("change", responseHandler(opt, current_question));
 
                 const label = document.createElement("label");
                 label.setAttribute("for", opt);
@@ -90,7 +89,7 @@ function renderQuestion(id) {
             break;
         case 'true_false':
             const tf = [true, false];
-            tf.forEach((opt) => {
+            tf.forEach(function(opt) {
                 const row = document.createElement("span");
                 row.setAttribute("class", "choice")
 
@@ -138,18 +137,18 @@ function renderQuestion(id) {
 
 function setInteractions(id) {
     //const question = document.getElementById("question");
-    storeDataValue(`cmi.interactions.${id}.type`, assessment[id].type);
-    assessment[id].answer.forEach((answer, i)=> {
-        storeDataValue(`cmi.interactions.${id}.correct_responses.${i}.pattern`, answer);
+    storeDataValue('cmi.interactions.'+id+'.type', assessment[id].type);
+    assessment[id].answer.forEach(function(answer, i) {
+        storeDataValue('cmi.interactions.'+id+'.correct_responses.'+i+'.pattern', answer);
     });
     
 }
 
 function responseHandler(response, id) {
-    storeDataValue(`cmi.interactions.${id}.learner_response`, response);
+    storeDataValue('cmi.interactions.'+id+'.learner_response', response);
     if (response === assessment[id].answer) {
-        storeDataValue(`cmi.interactions.${id}.result`, 'correct');
+        storeDataValue('cmi.interactions.'+id+'.result', 'correct');
     } else {
-        storeDataValue(`cmi.interactions.${id}.result`, 'incorrect');
+        storeDataValue('cmi.interactions.'+id+'.result', 'incorrect');
     }
 }
