@@ -38,7 +38,7 @@ function Initialize() {
 	// set a local variable to page 1
 	let location = 1;
 
-	startTime = new Date;
+	startTime = new Date();
 
 	// check whether resuming SCO
 	if (entryMode == "resume") {
@@ -69,7 +69,7 @@ function Terminate() {
 
 function doExit() {
 	endTime = new Date();
-	let totalMilliseconds = (endTime.getTime() - startTime.getTime());
+	let totalMilliseconds = endTime.getTime() - startTime.getTime();
 	let scormTime = ConvertMilliSecondsIntoSCORM2004Time(totalMilliseconds);
 	
 	storeDataValue("cmi.session_time", scormTime);
