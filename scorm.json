@@ -8,7 +8,7 @@
         "aggregation_level": "2"
     },
     "assessment": {
-        "passing_score": "0.8",
+        "passing_score": "0.8"
     }, 
     "lifecycle": {
         "version": 1.0,

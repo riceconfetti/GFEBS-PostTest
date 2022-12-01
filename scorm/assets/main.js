@@ -67,7 +67,7 @@ function renderQuestion(id) {
     options.setAttribute("class", "options")
 
     switch (questionJSON.type) {
-        case 'multiple-choice':
+        case 'multiple_choice':
             questionJSON.options.forEach((opt) => {
                 const row = document.createElement("span");
                 row.setAttribute("class", "choice")
@@ -77,18 +77,18 @@ function renderQuestion(id) {
                 option.setAttribute("id", opt);
                 option.setAttribute("name", "question_" + id);
                 option.setAttribute("value", opt);
+                option.addEvenetListener("change", responseHandler(opt, current_question));
 
                 const label = document.createElement("label");
                 label.setAttribute("for", opt);
                 label.innerHTML = opt;
-
 
                 row.appendChild(option);
                 row.appendChild(label);
                 options.appendChild(row);
             })
             break;
-        case 'tf':
+        case 'true_false':
             const tf = [true, false];
             tf.forEach((opt) => {
                 const row = document.createElement("span");
@@ -110,7 +110,7 @@ function renderQuestion(id) {
                 options.appendChild(row);
             })
             break;
-        case 'typed':
+        case 'fill_in':
             const option = document.createElement("input");
             option.setAttribute("type", "text");
             option.setAttribute("id", "question_" + id);
@@ -119,6 +119,13 @@ function renderQuestion(id) {
 
             options.appendChild(option);
             break;
+        case 'long_fill_in':
+        case 'likert':
+        case 'matching':
+        case 'performance':
+        case 'sequencing':
+        case 'numeric':
+        case 'other':
         default:
             break;
     }
@@ -127,4 +134,22 @@ function renderQuestion(id) {
     element.append(options);
 
     return element.innerHTML;
+}
+
+function setInteractions(id) {
+    //const question = document.getElementById("question");
+    storeDataValue(`cmi.interactions.${id}.type`, assessment[id].type);
+    assessment[id].answer.forEach((answer, i)=> {
+        storeDataValue(`cmi.interactions.${id}.correct_responses.${i}.pattern`, answer);
+    });
+    
+}
+
+function responseHandler(response, id) {
+    storeDataValue(`cmi.interactions.${id}.learner_response`, response);
+    if (response === assessment[id].answer) {
+        storeDataValue(`cmi.interactions.${id}.result`, 'correct');
+    } else {
+        storeDataValue(`cmi.interactions.${id}.result`, 'incorrect');
+    }
 }

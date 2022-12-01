@@ -47,7 +47,7 @@ function generateManifest() {
                 <imsss:sequencing>
                     <imsss:objectives>
                             <imsss:primaryObjective satisfiedByMeasure="true" objectiveID="${identifier}_EXAM">
-                                <imsss:minNormalizedMeasure>${scorm.assesment.passing_score}</imsss:minNormalizedMeasure>
+                                <imsss:minNormalizedMeasure>${scorm.assessment.passing_score}</imsss:minNormalizedMeasure>
                             </imsss:primaryObjective>
                     </imsss:objectives>
                 </imsss:sequencing>

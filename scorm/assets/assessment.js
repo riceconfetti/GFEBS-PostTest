@@ -1,18 +1,18 @@
 const assessment = [
     {
         "question": "What is a question?",
-        "type":"multiple-choice",
+        "type":"multiple_choice",
         "options":["a", "b", "c", "d"],
-        "answer": "c",
+        "answer": ["a"],
     },
     {
         "question": "This is a question",
-        "type":"tf",
-        "answer": "False",
+        "type":"true_false",
+        "answer": ["false"],
     },
     {
         "question": "What is a question?",
-        "type": "typed",
-        "answer": "42",
+        "type": "fill_in",
+        "answer": ["42"],
     }
 ]
