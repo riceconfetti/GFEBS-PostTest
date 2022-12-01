@@ -89,8 +89,35 @@ function renderQuestion(id) {
             })
             break;
         case 'tf':
+            const tf = [true, false];
+            tf.forEach((opt) => {
+                const row = document.createElement("span");
+                row.setAttribute("class", "choice")
+
+                const option = document.createElement("input");
+                option.setAttribute("type", "radio");
+                option.setAttribute("id", opt);
+                option.setAttribute("name", "question_" + id);
+                option.setAttribute("value", opt);
+
+                const label = document.createElement("label");
+                label.setAttribute("for", opt);
+                label.innerHTML = opt;
+
+
+                row.appendChild(option);
+                row.appendChild(label);
+                options.appendChild(row);
+            })
             break;
         case 'typed':
+            const option = document.createElement("input");
+            option.setAttribute("type", "text");
+            option.setAttribute("id", "question_" + id);
+            option.setAttribute("name", "question_" + id);
+            option.setAttribute("class", "choice")
+
+            options.appendChild(option);
             break;
         default:
             break;
