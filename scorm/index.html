@@ -11,11 +11,10 @@
     <script src="./assets/APIWrapper.js"></script>
     <script src="./assets/scormJS.js"></script>
     <script src="./assets/assessment.js"></script>
-    
 
     <title>L210E Post Test</title>
 </head>
-<body>
+<body onload="Initialize()">
     <section id="header">
         <h1>L210E Post Test</h1>
         <p>Basic disclaimer/instruction box here</p>
@@ -26,6 +25,11 @@
        <div id="question"></div>
     </section>
 
-    <nav id="nav"></nav>
+    <nav id="nav">
+        <button class ="nav-btn" id="prev" onclick="handleNavClick('prev')">Previous</button>
+        <button class ="nav-btn" id="next" onclick="handleNavClick('next')">Next</button>
+        <button class ="nav-btn" id="submit" onclick="handleNavClick('submit')">Submit</button>
+        <button class ="nav-btn show" id="exit" onclick="handleNavClick('exit')">Exit</button>
+    </nav>
 </body>
 </html>

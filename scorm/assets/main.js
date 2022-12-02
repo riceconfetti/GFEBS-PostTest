@@ -1,59 +1,80 @@
-let current_question = 0;
 const test = document.getElementById("test");
-const nav = document.getElementById("nav");
-const exit = document.createElement("button");
-exit.innerText = "Exit";
-//exit.addEventListener('click', doExit()); 
 
-nav.appendChild(exit);
+let current_question = 0;
+let complete = -1;
+let correct = 0;
+let questionStart;
+let questionEnd;
 
-const next = document.createElement("button");
-next.innerText = "Next";
-next.addEventListener('click', function () {
-    current_question++;
-    renderTest();
-});
+function handleNavClick(input) {
+    switch(input) {
+        case 'prev':
+            current_question--;
+            if (current_question === 0) {
+                complete = -1;
+            } else if (current_question === assessment.length-2) {
+                complete = 0;
+            }
+            
+            renderTest();
+            break;
+        case 'next':
+            current_question++;
+            complete = 0;
+            if (current_question === (assessment.length-1)) {
+                complete = 1;
+            } 
 
-const prev = document.createElement("button");
-prev.innerText = "Previous";
-prev.addEventListener('click', function () {
-    current_question--;
-    renderTest();
-});
-
-const submit = document.createElement("button");
-submit.innerText = "Submit";
-submit.addEventListener('click', function () {
-    doExit();
-});
-
+            renderTest();
+            break;
+        case 'submit':
+            console.log("Submitted")
+            checkScore();
+            persistData();    
+        case 'exit':
+            doExit();
+            break;
+    }
+}
 
 function runTest() {
     document.getElementById("header").style.display = "none";
-    nav.innerHTML = '';
     renderTest();
+}
+
+function renderNav() {
+    switch(complete) {
+        case -1:
+            document.getElementById("next").classList.add('show');
+            document.getElementById("prev").classList.remove('show');
+            document.getElementById("submit").classList.remove('show');
+            document.getElementById("exit").classList.add('show');
+            break;
+        case 0:
+            document.getElementById("next").classList.add('show');
+            document.getElementById("prev").classList.add('show');
+            document.getElementById("submit").classList.remove('show');
+            document.getElementById("exit").classList.add('show');
+            break;
+        case 1:
+            document.getElementById("next").classList.remove('show');
+            document.getElementById("prev").classList.add('show');
+            document.getElementById("submit").classList.add('show');
+            document.getElementById("exit").classList.remove('show');
+            break;
+    }
+
+    document.getElementById("nav").style.display = "block";
 }
 
 function renderTest() {
     test.innerHTML = renderQuestion(current_question);
-    renderNav(current_question);
+    setInteractions(current_question);
+    renderNav();
 }
 
-function renderNav(curr) {
-    const totalQ = assessment.length - 1;
-    nav.innerHTML = "";
-    if (curr === totalQ) {
-        nav.appendChild(prev);
-        nav.appendChild(submit);
-    } else if (curr === 0) {
-        nav.appendChild(next);
-        nav.appendChild(exit);
-    } else {
-        nav.appendChild(prev);
-        nav.appendChild(next);
-        nav.appendChild(exit);
-    }
-    return;
+function checkScore() {
+    storeDataValue("cmi.score.scaled", Math.round((correct/assessment.length)*100)/100);
 }
 
 function renderQuestion(id) {
@@ -66,7 +87,7 @@ function renderQuestion(id) {
     options.setAttribute("class", "options")
 
     switch (questionJSON.type) {
-        case 'multiple_choice':
+        case 'choice':
             questionJSON.options.forEach(function(opt) {
                 const row = document.createElement("span");
                 row.setAttribute("class", "choice")
@@ -74,9 +95,8 @@ function renderQuestion(id) {
                 const option = document.createElement("input");
                 option.setAttribute("type", "radio");
                 option.setAttribute("id", opt);
-                option.setAttribute("name", "question_" + id);
+                option.setAttribute("name", id);
                 option.setAttribute("value", opt);
-                option.addEventListener("change", responseHandler(opt, current_question));
 
                 const label = document.createElement("label");
                 label.setAttribute("for", opt);
@@ -87,7 +107,7 @@ function renderQuestion(id) {
                 options.appendChild(row);
             })
             break;
-        case 'true_false':
+        case 'true-false':
             const tf = [true, false];
             tf.forEach(function(opt) {
                 const row = document.createElement("span");
@@ -96,7 +116,7 @@ function renderQuestion(id) {
                 const option = document.createElement("input");
                 option.setAttribute("type", "radio");
                 option.setAttribute("id", opt);
-                option.setAttribute("name", "question_" + id);
+                option.setAttribute("name", id);
                 option.setAttribute("value", opt);
 
                 const label = document.createElement("label");
@@ -109,12 +129,12 @@ function renderQuestion(id) {
                 options.appendChild(row);
             })
             break;
-        case 'fill_in':
+        case 'fill-in':
             const option = document.createElement("input");
             option.setAttribute("type", "text");
-            option.setAttribute("id", "question_" + id);
-            option.setAttribute("name", "question_" + id);
-            option.setAttribute("class", "choice")
+            option.setAttribute("id", id);
+            option.setAttribute("name", id);
+            option.setAttribute("class", "choice");
 
             options.appendChild(option);
             break;
@@ -129,26 +149,40 @@ function renderQuestion(id) {
             break;
     }
 
-    element.append(question);
-    element.append(options);
+    element.appendChild(question);
+    element.appendChild(options);
 
     return element.innerHTML;
 }
 
 function setInteractions(id) {
-    //const question = document.getElementById("question");
+    questionStart = new Date();
+    const options = document.getElementsByTagName("input");
+    console.log(options);
+    const timestamp = questionStart.toISOString().slice(0, questionStart.toISOString().indexOf(".")+2) +"Z"; 
+
+    storeDataValue('cmi.interactions.'+id+'.id', "question_"+id);
+    storeDataValue('cmi.interactions.'+id+'.timestamp', timestamp);
     storeDataValue('cmi.interactions.'+id+'.type', assessment[id].type);
     assessment[id].answer.forEach(function(answer, i) {
         storeDataValue('cmi.interactions.'+id+'.correct_responses.'+i+'.pattern', answer);
     });
+
+    for (let i =0; i < options.length; ++i) {
+        let choice = options[i];
+        choice.addEventListener("change", responseHandler);
+    }
     
 }
 
-function responseHandler(response, id) {
-    storeDataValue('cmi.interactions.'+id+'.learner_response', response);
-    if (response === assessment[id].answer) {
-        storeDataValue('cmi.interactions.'+id+'.result', 'correct');
+function responseHandler(e) {
+    storeDataValue('cmi.interactions.'+e.target.name+'.learner_response', e.target.value);
+    questionEnd = new Date();
+    storeDataValue('cmi.interactions.'+e.target.name+'.latency', ConvertMilliSecondsIntoSCORM2004Time(questionEnd.getTime()-questionStart.getTime()))
+    if (e.target.value === assessment[e.target.name].answer) {
+        storeDataValue('cmi.interactions.'+e.target.name+'.result', 'correct');
+        correct++;
     } else {
-        storeDataValue('cmi.interactions.'+id+'.result', 'incorrect');
+        storeDataValue('cmi.interactions.'+e.target.name+'.result', 'incorrect');
     }
 }
