@@ -1,35 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link href="./assets/stylesheet.css" rel="stylesheet">
-    <script defer src="./assets/main.js"></script>
-    
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <link href="./assets/stylesheet.css"
+          rel="stylesheet">
+    <script defer
+            src="./assets/main.js"></script>
+
     <script src="./assets/APIWrapper.js"></script>
     <script src="./assets/scormJS.js"></script>
     <script src="./assets/assessment.js"></script>
 
-    <title>L210E Post Test</title>
+    <title>GFEBS Financial Process Overview Post Assessment</title>
 </head>
+
 <body onload="Initialize()">
-    <section id="header">
-        <h1>L210E Post Test</h1>
-        <p>Basic disclaimer/instruction box here</p>
-        <button onclick="runTest()">Start</button>
-    </section>
+    <main class="boxed">
+        <nav class="testHeader">
+            <button class="nav-btn show"
+                    id="exit"
+                    onclick="handleNavClick('exit')">Exit</button>
+        </nav>
+        <div class="homeTitle">
+            <h1>Financial Management School</h1>
+            <h2>GFEBS Financials Process Overview Post Assessment</h2>
+        </div>    
+        <section id="disclaimer">
+            <p>Welcome to the post assessment for General Fund Enterprise Business System (GFEBS) Finanicals Process Overview. This assessment will determine your knowledge of the concepts and procedures of GFEBS Financials Process Overview</p>
+            <strong>NOTE: You may not communicate with other sutdents, give or receive assistance, make a personal record of your answers, and pass on information about the tests to other sutdents. Failure to follopw these instructionws will result in the appropriate disciplinary actions being taken.</strong>
+            <h3>Select the Start button to continue<h3>
+            <button onclick="runTest()">Start</button>
+        </section>
 
-    <section id="test">
-       <div id="question"></div>
-    </section>
+        <section id="test">
+            <div id="question"></div>
+        </section>
 
-    <nav id="nav">
-        <button class ="nav-btn" id="prev" onclick="handleNavClick('prev')">Previous</button>
-        <button class ="nav-btn" id="next" onclick="handleNavClick('next')">Next</button>
-        <button class ="nav-btn" id="submit" onclick="handleNavClick('submit')">Submit</button>
-        <button class ="nav-btn show" id="exit" onclick="handleNavClick('exit')">Exit</button>
-    </nav>
+        <nav id="nav">
+            <button class="nav-btn"
+                    id="prev"
+                    onclick="handleNavClick('prev')">Previous</button>
+            <button class="nav-btn"
+                    id="next"
+                    onclick="handleNavClick('next')">Next</button>
+            <button class="nav-btn"
+                    id="submit"
+                    onclick="handleNavClick('submit')">Submit</button>
+        </nav>
+
+    </main>
 </body>
 </html>

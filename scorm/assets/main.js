@@ -38,7 +38,7 @@ function handleNavClick(input) {
 }
 
 function runTest() {
-    document.getElementById("header").style.display = "none";
+    document.getElementById("disclaimer").style.display = "none";
     renderTest();
 }
 
@@ -48,19 +48,16 @@ function renderNav() {
             document.getElementById("next").classList.add('show');
             document.getElementById("prev").classList.remove('show');
             document.getElementById("submit").classList.remove('show');
-            document.getElementById("exit").classList.add('show');
             break;
         case 0:
             document.getElementById("next").classList.add('show');
             document.getElementById("prev").classList.add('show');
             document.getElementById("submit").classList.remove('show');
-            document.getElementById("exit").classList.add('show');
             break;
         case 1:
             document.getElementById("next").classList.remove('show');
             document.getElementById("prev").classList.add('show');
             document.getElementById("submit").classList.add('show');
-            document.getElementById("exit").classList.remove('show');
             break;
     }
 
